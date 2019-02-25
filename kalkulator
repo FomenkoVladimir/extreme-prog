@@ -1,0 +1,88 @@
+#include <iostream>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h>
+
+
+//работает только в диапазоне двухзначных чисел 
+//БСБО-12-18 , ФОМЕНКО ВЛАДИМИР 
+//СРЕДА 4&5 ПАРА
+using namespace std;
+void SLOVANIN(int x)
+{
+	if(x<0){
+		cout<<"minus ";
+		x*=-1;
+	}
+	if(x==0)cout<<"null ";
+    if (x/10==1)
+	{
+		switch(x%10)
+		{
+		    case 0:cout << "desyat ";break;
+		   	case 1:cout << "odinadcat ";break;
+		   	case 2:cout << "dvenadcat ";break;
+		   	case 3:cout << "trinadcat ";break;
+		   	case 4:cout << "chetirnacat ";break;
+		   	case 5:cout << "pyatnadcat ";break;
+		   	case 6:cout << "shestnadcat ";break;
+		   	case 7:cout << "semnadcat ";break;
+		   	case 8:cout << "vosemnadcat ";break;
+		   	case 9:cout << "devyatnadcat ";break;
+		}
+	}
+	if(x/10!=1)
+	{
+		switch(x/10)
+		{
+			case 0:{
+				switch(x%10)
+				{
+					case 1:cout<<"odin ";break;
+					case 2:cout<<"dva ";break;
+					case 3:cout<<"tri ";break;
+					case 4:cout<<"chetire ";break;
+					case 5:cout<<"pyat ";break;
+					case 6:cout<<"shest ";break;
+					case 7:cout<<"sem ";break;
+					case 8:cout<<"vosem ";break;
+					case 9:cout<<"devyat ";break;
+				}
+				break;
+			}
+			case 2:cout<<"dvadcat ";if(x%10!=0)SLOVANIN(x%10);break;
+			case 3:cout<<"tridcat ";if(x%10!=0)SLOVANIN(x%10);break;
+			case 4:cout<<"sorok ";if(x%10!=0)SLOVANIN(x%10);break;
+			case 5:cout<<"pyatdecat ";if(x%10!=0)SLOVANIN(x%10);break;
+			case 6:cout<<"shestdecat ";if(x%10!=0)SLOVANIN(x%10);break;
+			case 7:cout<<"semdecat ";if(x%10!=0)SLOVANIN(x%10);break;
+			case 8:cout<<"vosemdecat ";if(x%10!=0)SLOVANIN(x%10);break;
+			case 9:cout<<"devyanosto ";if(x%10!=0)SLOVANIN(x%10);break;
+		}
+	}
+}
+int main()
+{
+	int const n = 50;
+	char* s = new char[n];
+	cin.getline(s, 32);
+	int a = atoi(s);
+	SLOVANIN(a);
+	for(int i=0;i<strlen(s);i++)
+	{
+		if (isdigit(s[i]) != true)
+		{   
+			if (s[i] == '+'){a = a + atoi(s + (i+1) * sizeof(char));cout<<"plus ";}
+			if (s[i] == '-'){a = a - atoi(s + (i+1) * sizeof(char));cout<<"minus ";}
+			if (s[i] == '*'){a = a * atoi(s + (i+1) * sizeof(char));cout<<"umnogit na ";}
+			if (s[i] == '/'){a = a / atoi(s + (i+1) * sizeof(char));cout<<"delit na ";}
+			SLOVANIN(atoi(s + (i+1) * sizeof(char)));
+     	}
+	}
+	cout<<"ravno ";
+	SLOVANIN(a);
+
+	
+	_getch();
+	return(0);
+}
