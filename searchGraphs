@@ -1,0 +1,86 @@
+#include <iostream>
+
+using namespace std;
+
+struct node{
+	int key;
+	node* left;
+	node* right;
+};
+node* root;
+
+void push(int key,node* parent){
+	if(key>=parent->key){
+		if(parent->right){push(key,parent->right);}
+		else{
+			parent->right=new node();
+			parent->right->key=key;
+		}
+	}
+	else{
+		if(parent->left){push(key,parent->left);}
+		else{
+			parent->left=new node();
+			parent->left->key=key;
+		}
+	}
+}
+void push(int key){
+	if(root){push(key,root);}
+	else {
+		root=new node();
+		root->key=key;
+	}
+}
+
+
+
+void print(node* parent){
+		if( parent -> left )
+		print( parent -> left );
+	
+		cout << "{" << parent -> key << "} ";
+	
+	if( parent -> right )
+		print( parent -> right);
+}
+void print(){
+	if( root )
+		print( root );
+		
+}
+
+int find(int key,node* parent){
+	if(key==parent->key)return(parent->key);
+	if(key>parent->key){
+		if(parent->right){find(key,parent->right);}
+		else return(0);
+	}
+	else{
+		if(parent->left){find(key,parent->left);}
+		else return(0);
+	}
+}
+int find(int key){
+	if(root){
+		if(root->key!=key){find(key,root);}
+		else return(root->key);
+	}
+	else return(0);
+}
+
+int main(){
+	push( 10 );
+	push( 5 );
+	push( 17 );
+	push( 13 );
+	push( 19 );
+	push( 2 );
+	push( 3 );
+	push( 4 );
+	
+	print();
+	
+	cout<<find(10);
+	return 0;
+}
