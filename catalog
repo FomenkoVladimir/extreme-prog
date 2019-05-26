@@ -1,0 +1,386 @@
+#include <iostream>
+#include <string>
+#include <conio.h>
+#include <fstream>
+#include <ctime>
+using namespace std;
+
+
+class str {
+private:
+	char* _data;
+public:
+	str() {
+		_data = new char;
+	}
+	str(char* x) {
+		_data = x;
+	}
+	void cleardata() {
+		char* n = new char;
+		_data = n;
+		delete n;
+	}
+	bool equal(str n) {
+		if (strcmp(_data, n.getname()) != 0)return false;
+		return true;
+	}
+	bool equal(char* n) {
+		if (strcmp(_data, n) != 0)return false;
+		return true;
+	}
+	char* getname() {
+		return _data;
+	}
+	int operator [](int i) {
+		return _data[i];
+	}
+};
+class file {
+private:
+	str _name;
+	int _usage;
+	int _hour;
+	int _min;
+	int _sec;
+public:
+	file(str name) {
+		_usage = 0;
+		_name = name;
+		_hour =0;
+		_min = 0;
+		_sec = 0;
+		time_t seconds;
+		seconds = time(NULL)+10800;
+		while (seconds > 86400) {
+			seconds -= 86400;
+		}
+		while (seconds > 3600) {
+			seconds -= 3600;
+			_hour++;
+		}
+		while (seconds > 60) {
+			seconds -= 60;
+			_min++;
+		}
+		_sec = seconds;
+	}
+	void setname(char* name) {
+		_name = name;
+	}
+	void inkus() {
+		_usage++;
+	}
+	int getus() {
+		return _usage;
+	}
+	str getnam() {
+		return _name;
+	}
+	int gethour() {
+		return _hour;
+	}
+	int getmin() {
+		return _min;
+	}
+	int getsec() {
+		return _sec;
+	}
+
+	void printname() {
+		cout << _name.getname();
+	}
+	~file() {
+		delete _name.getname();
+	}
+};
+class vectorus {
+private:
+	file** _list;
+	int _size;
+	int _cap;
+public:
+	vectorus() {
+		_size = 0;
+		_cap = 10;
+		_list = new file*[_cap];
+	}
+	void sortusage() {
+		for (int i = 0; i < _size - 1; i++) {
+			for (int j = i+1; j < _size; j++) {
+				if (_list[i]->getus() < _list[j]->getus()) {
+					file* a = _list[i];
+					_list[i] = _list[j];
+					_list[j] = a;
+				}
+			}
+		}
+	}
+	void pushfile(file* f) {
+		if (_size == _cap) {
+			_cap += 10;
+			file** n = new file*[_cap];
+			memcpy(n, _list, sizeof(file*)*_size);
+			_list = n;
+			delete n;
+		}
+		_list[_size] = f;
+		_size++;
+		sortusage();
+	}
+	void remove(int h, int m, int s) {
+		for (int i = 0; i < _size; i++) {
+			int f = 0;
+			if (_list[i]->gethour() < h) {
+				memcpy(_list + i, _list + i + 1, (_size - i) * sizeof(file*));
+				_size--;
+				f = 1;
+				i--;
+			}
+			if (f == 1)continue;
+			if (_list[i]->getmin() < m) {
+				memcpy(_list + i, _list + i + 1, (_size - i) * sizeof(file*));
+				_size--;
+				f = 1;
+				i--;
+			}
+			if (f == 1)continue;
+			if (_list[i]->getsec() < s) {
+				memcpy(_list + i, _list + i + 1, (_size - i) * sizeof(file*));
+				_size--;
+				i--;
+			}
+		}
+	}
+	void remove(char* name) {
+		for (int i = 0; i < _size; i++) {
+			if (_list[i]->getnam().equal(name)) {
+				memcpy(_list + i, _list + i + 1, (_size - i) * sizeof(file*));
+				_size--;
+			}
+		}
+		sortusage();
+	}
+	file* find(char* name) {
+		for (int i = 0; i < _size; i++) {
+			if ((strcmp(_list[i]->getnam().getname(), name)) == 0)return _list[i];
+		}
+		return nullptr;
+	}
+	int getsize() {
+		return _size;
+	}
+	file* operator [](int i) {
+		return _list[i];
+	}
+};
+class catalog {
+private:
+	file** _list;
+	int _size;
+	int _cap;
+public:
+	catalog() {
+		_size = 0;
+		_cap = 10;
+		_list = new file*[_cap];
+	}
+	void pushfile(file* f) {
+		if (_size == _cap) {
+			_cap += 10;
+			file** n = new file*[_cap];
+			memcpy(n, _list, sizeof(file*)*_size);
+			_list = n;
+			delete n;
+		}
+		_list[_size] = f;
+		_size++;
+	}
+	void remove(char* name) {
+		for (int i = 0; i < _size; i++) {
+			if (_list[i]->getnam().equal(name)) {
+				memcpy(_list + i, _list + i + 1, (_size - i) * sizeof(file*));
+				_size--;
+			}
+		}
+	}
+	void remove(int h,int m, int s) {
+		for (int i = 0; i < _size; i++) {
+				int f = 0;
+			if (_list[i]->gethour() < h) {
+				memcpy(_list + i, _list + i + 1, (_size - i) * sizeof(file*));
+				_size--;
+				f = 1;
+				i--;
+			}
+			if (f == 1)continue;
+			if (_list[i]->getmin() < m) {
+				memcpy(_list + i, _list + i + 1, (_size - i) * sizeof(file*));
+				_size--;
+				f = 1;
+				i--;
+			}
+			if (f == 1)continue;
+			if (_list[i]->getsec() < s) {
+				memcpy(_list + i, _list + i + 1, (_size - i) * sizeof(file*));
+				_size--;
+				i--;
+			}
+		}
+	}
+	file* find(char* name) {
+		for (int i = 0; i < _size; i++) {
+			if ((strcmp(_list[i]->getnam().getname(), name)) == 0)return _list[i];
+		}
+		return nullptr;
+	}
+	int getsize() {
+		return _size;
+	}
+	file* operator [](int i) {
+		return _list[i];
+	}
+};
+class menu {
+public:
+	void showv(vectorus v) {
+		cout << " MOST USABLE FILES: " << endl;
+		for (int i = 0; i < v.getsize(); i++) {
+			v[i]->printname();
+			cout << " USAGE: " << v[i]->getus() << endl;
+		}
+		_getch();
+	}
+	void show_list(catalog root) {
+		cout << "catalog:/" << endl;
+		for (int i = 0; i < root.getsize(); i++) {
+			root[i]->printname();
+			cout << endl;
+		}
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+		cout << "1 to create new file " << endl;
+		cout << "2 to open file" << endl;
+		cout << "3 to delete file " << endl;
+		cout << "4 to show list most usable files" << endl;
+		cout << "5 to create list.txt" << endl;
+		cout << "6 to remove all files that was created before input date" << endl;
+		cout << "X to exit" << endl;
+		cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
+	}
+	void show_menu(catalog root,vectorus v) {
+		char in = 0;
+		show_list(root);
+		in = getch();
+		while (in != 'x') {
+
+			switch (in) {
+			case '1': {
+				cout << "name new file" << endl;
+				char* name = new  char;
+				cin.getline(name, 10);
+				if (name[0] == ' ') {
+					cout << "invalid name!!!" << endl;
+					_getch();
+					break;
+				}
+				if (root.find(name) != nullptr) {
+					cout << "name is busy!" << endl;
+					_getch();
+					break;
+				}
+				file* n = new file(name);
+				root.pushfile(n);
+				v.pushfile(n);
+
+				break;
+			}
+			case '2': {
+				cout << "open file: ";
+				char* name = new  char;
+				cin.getline(name, 10);
+				if (root.find(name) != nullptr) {
+					system("cls");
+					root.find(name)->inkus();
+					v.sortusage();
+					cout << "name: ";
+					root.find(name)->printname();
+					cout << endl << "usage=" << root.find(name)->getus();
+					cout << endl << "date:" << root.find(name)->gethour() << ':' << root.find(name)->getmin() << ':'<<root.find(name)->getsec();
+					_getch();
+				}
+				else {
+					cout << "file does not exist";
+					_getch();
+				}
+				break;
+			}
+			case '3': {
+				cout << "delete file: ";
+				char* name = new  char;
+				cin.getline(name, 10);
+				if (root.find(name) != nullptr) {
+					root.remove(name);
+				}
+				if (v.find(name) != nullptr) {
+					v.remove(name);
+				}
+				else {
+					cout << "file does not exist";
+					_getch();
+				}
+				break;
+			}
+			case '4': {
+				showv(v);
+				break;
+			}
+			case '5': {
+				ofstream fout("list.txt");
+				for (int i = 0; i < v.getsize(); i++) {
+					fout <<"Name ["<< root[i]->getnam().getname() <<']'<< " date :[" << root[i]->gethour() << ':' << root[i]->getmin() << ':' << root[i]->getsec() <<']'<< endl;
+				}
+				fout.close();
+				cout << "list.txt is created";
+				_getch();
+				break;
+			}
+			case '7': {
+				int h, m, s;
+				cout << "input date: "<<endl;
+				cin >> h;
+				cin >> m;
+				cin >> s;
+				cin.ignore();
+				cout << endl;
+				root.remove(h, m, s);
+				v.remove(h, m, s);
+				break;
+			}
+
+			}
+			system("cls");
+			show_list(root);
+			in = getch();
+		}
+	}
+};
+int getamount_files() {
+	int n = 0;
+	char *str = new char[1024];
+	ifstream fin("input.txt");
+	while (!fin.eof())
+	{
+		fin.getline(str, 1024, '\n');
+		n++;
+	}
+	fin.close();
+	delete str;
+	return n - 1;
+}
+int main() {
+	catalog r;
+	vectorus v;
+	menu x;
+	x.show_menu(r,v);
+	return 0;
+}
