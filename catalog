@@ -344,7 +344,7 @@ public:
 				_getch();
 				break;
 			}
-			case '7': {
+			case '6': {
 				int h, m, s;
 				cout << "input date: "<<endl;
 				cin >> h;
